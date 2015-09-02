@@ -8,7 +8,11 @@ SOURCES += \
     line.cpp \
     drawmanager.cpp \
     main.cpp \
-    shader.cpp
+    shader.cpp \
+    mlog.cpp \
+    fileutility.cpp \
+    drawquad.cpp \
+    mwindow.cpp
 
 LIBS += -lSDL2
 
@@ -19,5 +23,9 @@ HEADERS += \
     line.h \
     drawmanager.h \
     drawobject.h \
-    shader.h
+    shader.h \
+    mlog.h \
+    fileutility.h \
+    drawquad.h \
+    mwindow.h
 
