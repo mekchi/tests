@@ -8,6 +8,8 @@ class DrawQuad
 public:
     DrawQuad();
     ~DrawQuad();
+
+
 };
 
 #endif // DRAWQUAD_H
