@@ -1,10 +1,11 @@
 #ifndef DRAWMANAGER_H
 #define DRAWMANAGER_H
 
-#include <vector>
 #include <memory>
 
-#include "drawobject.h"
+#include "camera.h"
+
+class DrawPointShaderManager;
 
 class DrawManager
 {
@@ -13,15 +14,14 @@ public:
     DrawManager();
     ~DrawManager();
 
-    void AddDrawObject(typeDrawObjectAllocateMethod method);
-    void Render();
+    bool Initialize();
+    void Manage();
+
 
 private:
 
-    typedef std::unique_ptr<DrawObject> typeDrawObject;
-    typedef std::vector<std::unique_ptr<DrawObject>> typeDrawObjectList;
-
-    typeDrawObjectList m_DrawObjects;
+    camera m_ortho_camera;
+    std::unique_ptr<DrawPointShaderManager> m_test_manager;
 };
 
 #endif // DRAWMANAGER_H

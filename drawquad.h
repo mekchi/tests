@@ -3,12 +3,13 @@
 
 #include "drawobject.h"
 
-class DrawQuad
+class DrawQuad : public DrawObject
 {
 public:
     DrawQuad();
-    ~DrawQuad();
+    virtual ~DrawQuad();
 
+    unsigned int GetDrawType() const;
 
 };
 

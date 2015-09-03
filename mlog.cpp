@@ -1,6 +1,8 @@
 
 #include "mlog.h"
 
+#include <cstdarg>
+#include <stdio.h>
 #include <iostream>
 
 MLog::MLog()
@@ -13,9 +15,17 @@ MLog::~MLog()
 
 }
 
-void MLog::Error(MLogErrorType error_type, const char *info)
+void MLog::Error(MLogErrorType error_type, const char *str, ...)
 {
-    std::cerr << ErrorType(error_type) << " : " << info;
+    static char buffer[4096];
+    va_list arguments;
+    int number = 0;
+
+    va_start(arguments, str);
+    vsprintf(buffer, str, arguments);
+    std::cerr << ErrorType(error_type) << " : " << buffer << std::endl;
+    va_end(arguments);
+
 }
 
 const char* MLog::ErrorType(MLogErrorType error_type)
@@ -35,7 +45,7 @@ const char* MLog::ErrorType(MLogErrorType error_type)
         return "INIT ERROR";
 
     default:
-        return;
+        return "";
     }
 }
 

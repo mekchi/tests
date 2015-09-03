@@ -2,6 +2,10 @@
 #include "mwindow.h"
 
 #include <assert.h>
+#include <GL/glew.h>
+
+#include "mlog.h"
+#include "drawmanager.h"
 
 bool MWindow::m_instantiated = false;
 
@@ -12,6 +16,9 @@ MWindow::MWindow()
 
     m_window = NULL;
     m_context = NULL;
+    m_draw_manager = NULL;
+
+    m_is_running = false;
 }
 
 MWindow::~MWindow()
@@ -33,13 +40,12 @@ bool MWindow::Create()
 
     if (m_window == NULL && m_context == NULL)
     {
-        resutl = SDL_Init(SDL_INIT_VIDEO) == 0;
+        result = SDL_Init(SDL_INIT_VIDEO) == 0;
 
         if (!result)
         {
             result = false;
-            std::cerr << "FE : SDL Initialization faild" << std::endl;
-            std::cerr << SDL_GetError() << std::endl;
+            MLog::Error(MLog::MLOG_ET_INIT, SDL_GetError());
         }
     }
 
@@ -59,8 +65,7 @@ bool MWindow::Create()
         if (m_window == NULL)
         {
             result = false;
-            std::cerr << "FE : SDL Window creation faild" << std::endl;
-            std::cerr << SDL_GetError() << std::endl;
+            MLog::Error(MLog::MLOG_ET_INIT, SDL_GetError());
         }
     }
 
@@ -71,8 +76,19 @@ bool MWindow::Create()
         if (m_context == NULL)
         {
             result = false;
-            std::cerr << "FE : SDL GL Context creation faild" << std::endl;
-            std::cerr << SDL_GetError() << std::endl;
+            MLog::Error(MLog::MLOG_ET_INIT, SDL_GetError());
+        }
+    }
+
+    if (result)
+    {
+        glewExperimental = GL_TRUE;
+        GLenum error = glewInit();
+
+        result = error == GLEW_OK;
+        if (!result)
+        {
+            MLog::Error(MLog::MLOG_ET_OPENGL, (char*)glewGetErrorString(error));
         }
     }
 
@@ -81,7 +97,16 @@ bool MWindow::Create()
         if (SDL_GL_SetSwapInterval(1) != 0)
         {
             result = false;
-            std::cerr << SDL_GetError() << std::endl;
+            MLog::Error(MLog::MLOG_ET_INIT, SDL_GetError());
+        }
+    }
+
+    if (result)
+    {
+        if (!Initialize() || !InitializeGL())
+        {
+            MLog::Error(MLog::MLOG_ET_INIT, "Faild to initialize window");
+            result = false;
         }
     }
 
@@ -96,4 +121,38 @@ void MWindow::Destroy()
     m_context = NULL;
 
     atexit(SDL_Quit);
+}
+
+bool MWindow::Initialize()
+{
+    m_draw_manager = new DrawManager;
+
+    return m_draw_manager->Initialize();
+}
+
+bool MWindow::InitializeGL()
+{
+    glViewport(0, 0, 800, 600);
+
+    return true;
+}
+
+void MWindow::Show()
+{
+    bool quit = false;
+    SDL_Event event;
+
+    while(!quit)
+    {
+        // handle events
+        while(SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+            {
+                quit = true;
+            }
+        }
+
+        m_draw_manager->Manage();
+    }
 }

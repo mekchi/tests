@@ -1,13 +1,17 @@
 
+#include "fileutility.h"
 #include "mwindow.h"
 
 int main(void)
 {
+    FileUtility::SetResourcePath("/home/mekchi/Documents/me/tests/");
+
     MWindow* window = new MWindow;
 
-    window->Create();
-
-    window->Display();
+    if (window->Create())
+    {
+        window->Show();
+    }
 
     window->Destroy();
 

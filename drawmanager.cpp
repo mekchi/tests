@@ -1,8 +1,14 @@
 
 #include "drawmanager.h"
 
+#include "drawpointshader.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 DrawManager::DrawManager()
 {
+    m_test_manager.reset(new DrawPointShaderManager);
 
 }
 
@@ -11,19 +17,18 @@ DrawManager::~DrawManager()
 
 }
 
-void DrawManager::AddDrawObject(typeDrawObjectAllocateMethod method)
+bool DrawManager::Initialize()
 {
-    if (method != NULL)
-    {
-        m_DrawObjects.push_back(typeDrawObject(method()));
-    }
+    m_ortho_camera.modelview = glm::mat4();
+    m_ortho_camera.projection = glm::ortho(-0.5f, 0.5f, -0.5f, 0.5f, -5.0f, 5.0f);
+
+    m_test_manager->SetCamera(&m_ortho_camera);
+
+    return m_test_manager->Initialize();
 }
 
-void DrawManager::Render()
+void DrawManager::Manage()
 {
-    for (auto& drawObject : m_DrawObjects)
-    {
-        drawObject->Render();
-    }
+    m_test_manager->Manage();
 }
 

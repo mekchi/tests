@@ -1,39 +1,49 @@
 
 #include "fileutility.h"
 
-#include <stdio.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <fstream>
 
-FileUtility::FileUtility()
-{
+std::string FileUtility::m_resource_path;
 
-}
-
-FileUtility::~FileUtility()
-{
-
-}
-
-bool FileUtility::ReadFile(const char *file, char **out_data)
+bool FileUtility::ReadFile(const char* file,
+                           char **out_data,
+                           int* out_data_size)
 {
     bool result = false;
-    FILE* file_ptr;
-    long size;
+    std::ifstream fs(file, std::ifstream::ate | std::ifstream::binary);
 
-    file_ptr = fopen(file, "rb");
+    result = fs.is_open();
 
-    result = file_ptr != NULL;
+    *out_data_size = fs.tellg();
+
+    result = *out_data_size > 0;
 
     if (result)
     {
-        fseek(file_ptr, 0, SEEK_END);
-        size = ftell(file_ptr);
-        *out_data = (char*)malloc(size + 1);
-        fseek(file_ptr, 0, SEEK_SET);
-        fread(buffer, size, 1, file_ptr);
-        fclose(file_ptr);
-        (*out_data)[length] = 0;
+        *out_data = (char*)malloc(*out_data_size + 1);
+        fs.seekg(0, std::ifstream::beg);
+        fs.read(*out_data, *out_data_size);
+        fs.close();
+        out_data[*out_data_size] = 0;
     }
 
     return result;
+}
+
+const char* FileUtility::GetResourcePath()
+{
+    return m_resource_path.c_str();
+}
+
+const char* FileUtility::GetFullResourcePath(const char *file)
+{
+    return (m_resource_path + file).c_str();
+}
+
+void FileUtility::SetResourcePath(const char *path)
+{
+    m_resource_path = path;
 }
 

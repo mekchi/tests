@@ -1,6 +1,8 @@
 
 #include "shader.h"
 
+#include <stdlib.h>
+
 #include "mlog.h"
 #include "fileutility.h"
 
@@ -32,23 +34,36 @@ GLuint Shader::CompileShader(GLuint shader_type, const char *file)
     int compile_status = GL_FALSE;
     GLuint shader = 0;
     GLchar* source_code = NULL;
+    int source_code_size = 0;
 
     shader = glCreateShader(shader_type);
 
     if (shader != 0)
     {
-        if (!FileUtility::ReadFile(file, (char**)&source_code))
+        if (!FileUtility::ReadFile(file,
+                                   (char**)&source_code,
+                                   &source_code_size))
         {
-            MLog::Error(MLog::MLOG_ET_FILE, "Faild to read file");
+            MLog::Error(MLog::MLOG_ET_FILE, "Faild to read %s", file);
             glDeleteShader(shader);
             shader = 0;
+        }
+
+        if (source_code_size == 0)
+        {
+            MLog::Error(MLog::MLOG_ET_FILE, "File %s is empty", file);
+            glDeleteShader(shader);
+            shader = 0;
+
         }
     }
 
     if (shader != 0)
     {
-        glShaderSource(shader, 1, (const GLchar**)&source_code, 0);
+        glShaderSource(shader, 1, (const GLchar**)&source_code, NULL);
         glCompileShader(shader);
+
+        free(source_code);
 
         // check status of compilation
         // if not output log
@@ -64,6 +79,7 @@ GLuint Shader::CompileShader(GLuint shader_type, const char *file)
 
             glGetShaderInfoLog(shader, size, &size, log);
 
+            //MLog::Error(MLog::MLOG_ET_OPENGL, "Shader compile error in %s:", file);
             MLog::Error(MLog::MLOG_ET_OPENGL, log);
 
             free(log);
@@ -96,34 +112,11 @@ bool Shader::LinkProgram(GLuint shader_program)
 
         log = (char*)malloc(size);
 
-        glGetProgramInfoLog(shader_program, size, &size, shaderProgramInfoLog);
+        glGetProgramInfoLog(shader_program, size, &size, log);
         MLog::Error(MLog::MLOG_ET_OPENGL, log);
 
         free(log);
     }
 
     return link_status == GL_TRUE;
-}
-
-bool DrawArcShader::Init()
-{
-    bool result = false;
-    GLuint vertex_shader = CompileShader(GL_VERTEX_SHADER, "");
-    GLuint fragment_shader = CompileShader(GL_FRAGMENT_SHADER, "");
-
-    result = (vertex_shader != 0 && fragment_shader != 0);
-
-    if (result)
-    {
-        AttachShader(m_shader_program, vertex_shader);
-        AttachShader(m_shader_program, fragment_shader);
-        result = LinkProgram(m_shader_program);
-
-        if (!result)
-        {
-            MLog::Error(MLog::MLOG_ET_INIT, "Faild to initialize DrawArcShader");
-        }
-    }
-
-    return result;
 }

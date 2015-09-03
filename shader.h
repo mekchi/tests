@@ -9,7 +9,7 @@ public:
     Shader();
     virtual ~Shader();
 
-    virtual bool Init() = 0;
+    virtual bool Initialize() = 0;
     virtual void Bind();
 
 protected:
@@ -19,12 +19,6 @@ protected:
     static bool LinkProgram(GLuint shader_program);
 
     GLuint m_shader_program;
-};
-
-class DrawArcShader : private Shader
-{
-public:
-    virtual bool Init();
 };
 
 #endif // SHADER_H

@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+class DrawManager;
+
 class MWindow
 {
 public:
@@ -12,14 +14,24 @@ public:
 
     bool Create();
     void Destroy();
+    void Show();
+
 
 private:
+
+    bool Initialize();
+    bool InitializeGL();
 
     // there can be only one copy of this object
     static bool m_instantiated;
 
-    SDL_Window *m_window = NULL;
-    SDL_GLContext *m_context = NULL;
+    SDL_Window *m_window;
+    SDL_GLContext m_context;
+
+    DrawManager *m_draw_manager;
+
+    bool m_is_running;
+
 };
 
 #endif // MWINDOW_H

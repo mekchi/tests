@@ -12,10 +12,10 @@ public:
         MLOG_ET_INIT,
         MLOG_ET_ERROR,
         MLOG_ET_FILE,
-        MLOG_ET_OPENGL
+        MLOG_ET_OPENGL,
     };
 
-    static Error(MLogErrorType error_type, const char* info);
+    static void Error(MLogErrorType error_type, const char* str, ...);
 
 private:
 
