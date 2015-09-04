@@ -14,7 +14,7 @@ public:
 	virtual const void* GetData() const;
 
 private:
-	glm::vec3* m_data;
+	double* m_data;
 };
 
 #endif // DRAWQUAD_H

@@ -6,12 +6,14 @@
 
 DrawQuad::DrawQuad()
 {
-    m_data = new glm::vec3[4];
-    m_data[0] = glm::vec3(-0.5, -0.5, 0.0);
-    m_data[1] = glm::vec3(0.5, -0.5, 0.0);
-    m_data[2] = glm::vec3(-0.5, 0.5, 0.0);
-    m_data[3] = glm::vec3(0.5, 0.5, 0.0);
-    m_data_size = sizeof(glm::vec3) * 4;
+	const double data[] = {-0.5, -0.5, 0.0, 0.0, 0.0,
+						  0.5, -0.5, 0.0, 1.0, 0.0,
+						  -0.5, 0.5, 0.0, 0.0, 1.0,
+						  0.5, 0.5, 0.0, 1.0, 1.0};
+
+    m_data = new double[20];
+	m_data_size = sizeof(data);
+	memcpy_s(m_data, 1, data, m_data_size);
     m_data_offset = 0;
     m_first_to_draw = 0;
     m_number_to_draw = 4;
