@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#undef main
+
 class DrawManager;
 
 class MWindow

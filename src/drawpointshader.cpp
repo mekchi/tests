@@ -34,8 +34,8 @@ bool DrawPointShader::Initialize()
 
     if (result)
     {
-        vertex_shader = CompileShader(GL_VERTEX_SHADER, FileUtility::GetFullResourcePath("shaders/draw_point.vert"));
-        fragment_shader = CompileShader(GL_FRAGMENT_SHADER, FileUtility::GetFullResourcePath("shaders/draw_point.frag"));
+        vertex_shader = CompileShader(GL_VERTEX_SHADER, FileUtility::GetFullResourcePath("shaders/draw_point.vert").c_str());
+        fragment_shader = CompileShader(GL_FRAGMENT_SHADER, FileUtility::GetFullResourcePath("shaders/draw_point.frag").c_str());
 
         result = (vertex_shader != 0 && fragment_shader != 0);
     }
@@ -132,7 +132,7 @@ bool DrawPointShaderManager::Initialize()
     return result;
 }
 
-void DrawPointShaderManager::SetCamera(const camera *camera)
+void DrawPointShaderManager::SetCamera(camera *camera)
 {
     m_camera = camera;
 }

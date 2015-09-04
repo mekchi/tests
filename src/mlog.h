@@ -13,6 +13,7 @@ public:
         MLOG_ET_ERROR,
         MLOG_ET_FILE,
         MLOG_ET_OPENGL,
+		MLOG_ET_LOG
     };
 
     static void Error(MLogErrorType error_type, const char* str, ...);

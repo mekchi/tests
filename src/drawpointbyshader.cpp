@@ -35,3 +35,8 @@ unsigned int DrawPointByShader::GetDrawType() const
 {
     return GL_POINTS;
 }
+
+const void* DrawPointByShader::GetData() const
+{
+	return (const void*)m_data;
+}

@@ -79,8 +79,8 @@ GLuint Shader::CompileShader(GLuint shader_type, const char *file)
 
             glGetShaderInfoLog(shader, size, &size, log);
 
-            //MLog::Error(MLog::MLOG_ET_OPENGL, "Shader compile error in %s:", file);
-            MLog::Error(MLog::MLOG_ET_OPENGL, log);
+            MLog::Error(MLog::MLOG_ET_OPENGL, "Shader compile error in %s:", file);
+            MLog::Error(MLog::MLOG_ET_LOG, log);
 
             free(log);
             glDeleteShader(shader);
@@ -113,7 +113,7 @@ bool Shader::LinkProgram(GLuint shader_program)
         log = (char*)malloc(size);
 
         glGetProgramInfoLog(shader_program, size, &size, log);
-        MLog::Error(MLog::MLOG_ET_OPENGL, log);
+		MLog::Error(MLog::MLOG_ET_LOG, log);
 
         free(log);
     }

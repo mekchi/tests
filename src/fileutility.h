@@ -7,8 +7,8 @@ class FileUtility
 {
 public:
     static void SetResourcePath(const char* path);
-    static const char* GetResourcePath();
-    static const char* GetFullResourcePath(const char* file);
+    static const std::string& GetResourcePath();
+    static std::string GetFullResourcePath(const char* file);
     static bool ReadFile(const char* file,
                          char** out_data,
                          int* out_data_size);

@@ -26,20 +26,20 @@ bool FileUtility::ReadFile(const char* file,
         fs.seekg(0, std::ifstream::beg);
         fs.read(*out_data, *out_data_size);
         fs.close();
-        out_data[*out_data_size] = 0;
+        (*out_data)[*out_data_size] = 0;
     }
 
     return result;
 }
 
-const char* FileUtility::GetResourcePath()
+const std::string& FileUtility::GetResourcePath()
 {
     return m_resource_path.c_str();
 }
 
-const char* FileUtility::GetFullResourcePath(const char *file)
+std::string FileUtility::GetFullResourcePath(const char *file)
 {
-    return (m_resource_path + file).c_str();
+    return m_resource_path + file;
 }
 
 void FileUtility::SetResourcePath(const char *path)

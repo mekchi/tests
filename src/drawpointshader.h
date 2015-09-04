@@ -36,7 +36,7 @@ public:
     ~DrawPointShaderManager();
 
     bool Initialize();
-    void SetCamera(const camera* camera);
+    void SetCamera(camera* camera);
     void Manage();
 
 private:
