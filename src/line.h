@@ -10,23 +10,15 @@ class Line : public DrawObject
 {
 public:
     Line();
-    ~Line();
+    virtual ~Line();
 
-//    static Line* Allocate() { return new Line; }
+    virtual unsigned int GetDrawType() const;
+    virtual const void* GetData() const;
 
-//    virtual GLuint GetDrawType() { return GL_TRIANGLE_STRIP; }
-//    virtual void Render();
+private:
 
-//    void SetPoints(const glm::vec3& point1, const glm::vec3& point2);
-//    void SetWidth(double width);
-//    void SetSegmentNumber(int number);
+    double *m_data;
 
-//private:
-//    bool LoadData();
-//    void UnloadData();
-
-//    GLuint m_VBO;
-//    GLuint m_VAO;
 };
 
 #endif // LINE_H

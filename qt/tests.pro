@@ -5,34 +5,34 @@ CONFIG -= qt
 CONFIG += c++11
 
 HEADERS += \
-    line.h \
-    drawmanager.h \
-    drawobject.h \
-    shader.h \
-    mlog.h \
-    fileutility.h \
-    drawquad.h \
-    mwindow.h \
-    drawpointbyshader.h \
-    drawpointshader.h \
-    camera.h
+    ../src/camera.h \
+    ../src/drawmanager.h \
+    ../src/drawobject.h \
+    ../src/drawpointbyshader.h \
+    ../src/drawpointshader.h \
+    ../src/drawquad.h \
+    ../src/fileutility.h \
+    ../src/line.h \
+    ../src/mlog.h \
+    ../src/mwindow.h \
+    ../src/shader.h
 
 SOURCES += \
-    line.cpp \
-    drawmanager.cpp \
-    main.cpp \
-    shader.cpp \
-    mlog.cpp \
-    fileutility.cpp \
-    drawquad.cpp \
-    mwindow.cpp \
-    drawpointbyshader.cpp \
-    drawpointshader.cpp \
-    camera.cpp
+    ../src/camera.cpp \
+    ../src/drawmanager.cpp \
+    ../src/drawpointbyshader.cpp \
+    ../src/drawpointshader.cpp \
+    ../src/drawquad.cpp \
+    ../src/fileutility.cpp \
+    ../src/line.cpp \
+    ../src/main.cpp \
+    ../src/mlog.cpp \
+    ../src/mwindow.cpp \
+    ../src/shader.cpp
 
 OTHER_FILES += \
-    shaders/draw_point.vert \
-    shaders/draw_point.frag
+    ../shaders/draw_point.frag \
+    ../shaders/draw_point.vert
 
 
 LIBS += -lSDL2 -lGL -lGLEW
@@ -40,7 +40,4 @@ LIBS += -lSDL2 -lGL -lGLEW
 include(deployment.pri)
 qtcAddDeployment()
 
-#DISTFILES += \
-#    shaders/draw_point.frag \
-#    shaders/draw_point.vert
 

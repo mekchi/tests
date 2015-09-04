@@ -22,7 +22,7 @@ void MLog::Error(MLogErrorType error_type, const char *str, ...)
 
 	fprintf(stderr, "%s : ", ErrorType(error_type));
     va_start(arguments, str);
-    vfprintf_s(stderr, str, arguments);
+    vfprintf(stderr, str, arguments);
     va_end(arguments);
 	fprintf(stderr, "\n");
 

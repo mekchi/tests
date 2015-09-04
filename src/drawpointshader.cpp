@@ -5,8 +5,11 @@
 
 #include "mlog.h"
 #include "fileutility.h"
-#include "drawpointbyshader.h"
 #include "camera.h"
+
+#include "drawquad.h"
+#include "line.h"
+#include "drawpointbyshader.h"
 
 
 DrawPointShader::DrawPointShader()
@@ -23,6 +26,8 @@ bool DrawPointShader::Initialize()
 {
     const char* modelview_name = "modelview";
     const char* projection_name = "projection";
+    const char* vertex_name = "vertex";
+    const char* uv_name = "uv";
 
     bool result = false;
     GLuint vertex_shader;
@@ -52,6 +57,9 @@ bool DrawPointShader::Initialize()
             // locate uniforms
             m_uniform_modelview = glGetUniformLocation(m_shader_program, modelview_name);
             m_uniform_projection = glGetUniformLocation(m_shader_program, projection_name);
+
+            m_attribute_vertex = glGetAttribLocation(m_shader_program, vertex_name);
+            m_attribute_uv = glGetAttribLocation(m_shader_program, uv_name);
         }
         else
         {
@@ -62,19 +70,19 @@ bool DrawPointShader::Initialize()
     return result;
 }
 
-void DrawPointShader::SetModelviewMatrix(const glm::mat4x4 &matrix)
+void DrawPointShader::SetModelviewMatrix(const glm::mat4 &matrix)
 {
     glUniformMatrix4fv(m_uniform_modelview, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-void DrawPointShader::SetProjectionMatrix(const glm::mat4x4 &matrix)
+void DrawPointShader::SetProjectionMatrix(const glm::mat4 &matrix)
 {
     glUniformMatrix4fv(m_uniform_projection, 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
 DrawPointShaderManager::DrawPointShaderManager()
 {
-    m_shader.reset(new DrawPointShader);
+//    m_shader.reset(new DrawPointShader);
     m_vao = 0;
     m_vbo = 0;
 }
@@ -92,14 +100,17 @@ DrawPointShaderManager::~DrawPointShaderManager()
 
 bool DrawPointShaderManager::Initialize()
 {
-    bool result = m_shader->Initialize();
+//    bool result = m_shader->Initialize();
+    bool result = DrawPointShader::Initialize();
 
     if (result)
     {
         unsigned int size = 0;
         unsigned int first = 0;
 
-        m_draw_object_list.push_back(new DrawPointByShader);
+        //m_draw_object_list.push_back(new DrawPointByShader);
+        m_draw_object_list.push_back(new DrawQuad);
+//        m_draw_object_list.push_back(new Line);
 
         glGenVertexArrays(1, &m_vao);
         glGenBuffers(1, &m_vbo);
@@ -124,9 +135,11 @@ bool DrawPointShaderManager::Initialize()
             size += object->GetDataSize();
         }
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 0, 0);
-        glBindVertexArray(0);
+        glEnableVertexAttribArray(m_attribute_vertex);
+        glVertexAttribPointer(m_attribute_vertex, 3, GL_DOUBLE, GL_FALSE, sizeof(double) * 5, 0);
+        glEnableVertexAttribArray(m_attribute_uv);
+        glVertexAttribPointer(m_attribute_uv, 2, GL_DOUBLE, GL_FALSE, sizeof(double) * 5, (const GLvoid*)(sizeof(double) * 3));
+
     }
 
     return result;
@@ -139,9 +152,9 @@ void DrawPointShaderManager::SetCamera(camera *camera)
 
 void DrawPointShaderManager::Manage()
 {
-    m_shader->Bind();
-    m_shader->SetModelviewMatrix(m_camera->modelview);
-    m_shader->SetProjectionMatrix(m_camera->projection);
+    DrawPointShader::Bind();
+    DrawPointShader::SetModelviewMatrix(m_camera->modelview);
+    DrawPointShader::SetProjectionMatrix(m_camera->projection);
 
     glBindVertexArray(m_vao);
     for (const DrawObject* object : m_draw_object_list)

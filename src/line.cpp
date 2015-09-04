@@ -2,42 +2,37 @@
 #include "drawobject.h"
 #include "line.h"
 
+#include <string.h>
+
+
+
 Line::Line()
 {
+    const double data[] = {-0.25, -0.25, 0.0, 0.0, 0.0,
+                          0.25, -0.25, 0.0, 1.0, 0.0};
+
+    m_data = new double[10];
+    m_data_size = sizeof(data);
+    memcpy(m_data, data, m_data_size);
+    m_data_offset = 0;
+    m_first_to_draw = 0;
+    m_number_to_draw = 2;
 }
 
 Line::~Line()
 {
+    if (m_data)
+    {
+        delete [] m_data;
+    }
 }
 
-//bool Line::LoadData()
-//{
-//    glm::vec3 p1 = glm::vec3(0.0);
-//    glm::vec3 p2 = glm::vec3(1.0);
-//    glm::vec3 v = p2 - p1;
-//    double width = 1.0;
-//    double length = glm::length(v);
-//    double scale = width / length;
-//    //int number = 12;
-//    glm::vec3 perp = glm::vec3(-v.y * scale, v.x * scale, 0.0);
+unsigned int Line::GetDrawType() const
+{
+    return GL_LINES;
+}
 
-//    glBindVertexArray(m_VAO);
-//    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * 4, m_Data, GL_STATIC_DRAW);
-//    glEnableVertexAttribArray(0);
-//    glVertexAttribPointer(0, 3, GL_DOUBLE, GL_FALSE, 0, 0);
-//    glBindVertexArray(0);
-//}
-
-//void Line::UnloadData()
-//{
-//    glDeleteBuffers(1, &m_VBO);
-//    glDeleteVertexArrays(1, &m_VAO);
-//}
-
-//void Line::Render()
-//{
-//    glBindVertexArray(m_VAO);
-//    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//    glBindVertexArray(0);
-//}
+const void* Line::GetData() const
+{
+    return (const void*)m_data;
+}

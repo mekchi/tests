@@ -9,6 +9,9 @@
 
 bool MWindow::m_instantiated = false;
 
+const unsigned int window_width = 800;
+const unsigned int window_height = 800;
+
 MWindow::MWindow()
 {
     assert(!m_instantiated);
@@ -58,8 +61,8 @@ bool MWindow::Create()
          m_window = SDL_CreateWindow("tests",
                                     SDL_WINDOWPOS_CENTERED,
                                     SDL_WINDOWPOS_CENTERED,
-                                    800,
-                                    600,
+                                    window_width,
+                                    window_height,
                                     SDL_WINDOW_OPENGL);
 
         if (m_window == NULL)
@@ -132,7 +135,10 @@ bool MWindow::Initialize()
 
 bool MWindow::InitializeGL()
 {
-    glViewport(0, 0, 800, 600);
+    glViewport(0, 0, window_width, window_height);
+
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
 
     return true;
 }
@@ -153,6 +159,10 @@ void MWindow::Show()
             }
         }
 
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         m_draw_manager->Manage();
+
+        SDL_GL_SwapWindow(m_window);
     }
 }

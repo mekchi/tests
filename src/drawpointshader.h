@@ -19,17 +19,20 @@ public:
     virtual ~DrawPointShader();
     virtual bool Initialize();
 
-    void SetModelviewMatrix(const glm::mat4x4& matrix);
-    void SetProjectionMatrix(const glm::mat4x4& matrix);
+    void SetModelviewMatrix(const glm::mat4& matrix);
+    void SetProjectionMatrix(const glm::mat4& matrix);
 
-private:
+protected:
 
     GLuint m_uniform_projection;
     GLuint m_uniform_modelview;
+
+    GLuint m_attribute_vertex;
+    GLuint m_attribute_uv;
 };
 
 // Manager draws objects using DrawPointShader
-class DrawPointShaderManager
+class DrawPointShaderManager : private DrawPointShader
 {
 public:
     DrawPointShaderManager();
@@ -41,7 +44,7 @@ public:
 
 private:
 
-    std::unique_ptr<DrawPointShader> m_shader;
+    //std::unique_ptr<DrawPointShader> m_shader;
     std::vector<DrawObject*> m_draw_object_list;
 
     camera *m_camera;
